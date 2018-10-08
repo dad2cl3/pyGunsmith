@@ -3,9 +3,9 @@ Discord bot written in Python. Allows users to show off guns acquired while play
 # Introduction
 The bot is split into two separate files. The first, [pyGunsmith.py](https://github.com/dad2cl3/pyGunsmith/blob/master/pyGunsmith.py), contains the basic code the bot needs to function.
 
-The second, [gunsmith.py](https://github.com/dad2cl3/pyGunsmith/), contains the processing logic necessary to support the various commands supporting by the bot except for the *help* option.
+The second, [gunsmith.py](https://github.com/dad2cl3/pyGunsmith/), contains the processing logic necessary to support the various commands available except the *help* option.
 
-The main processing logic relies upon two functions: *initialize* and *main*.
+The main processing logic relies upon two functions: *initialize()* and *main()*.
 
 *initialize()* loads all possible definitions from the manifest into memory within the bot in order to greatly minimize the number of calls needed to the Bungie.net API.
 
@@ -14,11 +14,11 @@ The main processing logic relies upon two functions: *initialize* and *main*.
 # Dependencies
 The gunsmith bot relies on the following repositories (which may or may not be up to date :-) I swear it is on my list of todos):
 
-[destiny-clan-member-manager](https://github.com/dad2cl3/destiny-clan-member-manager): Daily process to refresh clan member data
+[destiny-clan-member-manager](https://github.com/dad2cl3/destiny-clan-member-manager): Daily process to refresh clan member data.
 
-[destiny-manifest-manager](https://github.com/dad2cl3/destiny-manifest-manager): Daily process to keep manifest data up to date
+[destiny-manifest-manager](https://github.com/dad2cl3/destiny-manifest-manager): Daily process to keep manifest data up to date.
 
-[pyWelcomeBot](https://github.com/dad2cl3/pyWelcomeBot): Discord bot that supports several administrative functions including maintaining a cross-reference of Discord accounts to Destiny accounts
+[pyWelcomeBot](https://github.com/dad2cl3/pyWelcomeBot): Discord bot that supports several administrative functions including maintaining a cross-reference of Discord accounts to Destiny accounts.
 
 # Supported Commands
 
@@ -49,14 +49,14 @@ kinetic
 energy
 power
 
-Syntax examples:
+Syntax Examples:
 !gunsmith
 !gunsmith hunter
 !gunsmith power
 !gunsmith xb
 !gunsmith hunter power xb
-```
-# Processing Rules
+
+Processing Rules:
 
 If *platform* is not supplied, the most recent platform played will be identified.
 
@@ -65,13 +65,13 @@ If *subclass* is not supplied, the most recent character played will be used.
 If *weapon* is not supplied, all equipped weapons will be returned.
 
 If no options are supplied, all equipped weapons for the most recently played character on the most recently played platform will be returned.
-
+```
 **Note:** The bot will ignore options it doesn't recognize based on the valid options and rules above.
 
 ## !gunsmith reload
-The *reload* command forces the bot to reload manifest definitions utilized within the bot.
+The *reload* command forces the bot to reload manifest definitions and the Discord user to Destiny account(s) cross-reference utilized by the bot. It can only be run by a specified list of users including the gunsmith.
 
-A webhook can also be created to support reloading of definitions as part of automated processing. Simply create a webhook and send the payload !gunsmith reload after a refresh of manifest data from Bungie, for example.
+An optional webhook was also be created to support reloading of all in-memory data as part of automated processing. The webhook is called following the daily refresh of clan member data and after a refresh of manifest data from Bungie.net. The payload of the webhook is simply *!gunsmith reload*.
 
 ## !gunsmith [platform] [subclass] [weapon]
 The main option for showing off guns in Discord.
@@ -83,6 +83,6 @@ Sample response in Discord:
 
 ![!gunsmith help](https://github.com/dad2cl3/pyGunsmith/blob/master/doc/gunsmith-help.png)
 
-![!gunsmith reload]()
+![!gunsmith reload](https://github.com/dad2cl3/pyGunsmith/blob/master/doc/gunsmith-reload.png)
 
-![!gunsmith [platform] [subclass] [weapon]]()
+![!gunsmith [platform] [subclass] [weapon]](https://github.com/dad2cl3/pyGunsmith/blob/master/doc/gunsmith.png)
