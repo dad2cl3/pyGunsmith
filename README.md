@@ -1,9 +1,9 @@
 # pyGunsmith
 Discord bot written in Python. Allows users to show off guns acquired while playing Destiny 2.
 # Introduction
-The bot is split into two separate files. The first, pyGunsmith.py(add link to repo file), contains the basic code the bot needs to function.
+The bot is split into two separate files. The first, [pyGunsmith.py](https://github.com/dad2cl3/pyGunsmith/blob/master/pyGunsmith.py), contains the basic code the bot needs to function.
 
-The second, gunsmith.py(add link to repo file), contains the processing logic necessary to support the various commands supporting by the bot except for the *help* option.
+The second, [gunsmith.py](https://github.com/dad2cl3/pyGunsmith/), contains the processing logic necessary to support the various commands supporting by the bot except for the *help* option.
 
 The main processing logic relies upon two functions: *initialize* and *main*.
 
@@ -79,13 +79,10 @@ The main option for showing off guns in Discord.
 Sample response in Discord:
 [Insert screenshot]
 
-# Process flows
+# Process Flows
 
-## !gunsmith help
-[Insert screenshot]
+![!gunsmith help](https://github.com/dad2cl3/pyGunsmith/blob/master/doc/gunsmith-help.png)
 
-## !gunsmith reload
-[Insert screenshot]
+![!gunsmith reload]()
 
-## !gunsmith [platform] [subclass] [weapon]
-[Insert screenshot]
+![!gunsmith [platform] [subclass] [weapon]]()
