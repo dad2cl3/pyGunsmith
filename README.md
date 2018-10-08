@@ -84,6 +84,7 @@ An optional webhook was also be created to support reloading of all in-memory da
 The main option for showing off guns in Discord.
 
 Sample response in Discord:
+
 ![Sample response](https://github.com/dad2cl3/pyGunsmith/blob/master/doc/gunsmith-response.png)
 
 # Process Flows
