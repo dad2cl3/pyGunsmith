@@ -24,7 +24,7 @@ The gunsmith bot relies on the following repositories (which may or may not be u
 
 [pyWelcomeBot](https://github.com/dad2cl3/pyWelcomeBot): Discord bot that supports several administrative functions including maintaining a cross-reference of Discord accounts to Destiny accounts.
 
-**Note:** The dependency on converting a Discord user to a Destiny account can be removed if an additional parameter is added to the gunsmith that represents the Bungie.net account name. An additional API call would be necessary to resolve the Bungie.net account name to one or more Destiny account profiles. Another option would be to require a Destiny gamertag and make the platform option required. The two values could then be used to resolve to a Destiny account profile through a call to the Bungie.net API.
+**Note:** The dependency on converting a Discord user to a Destiny account can be removed if an additional parameter is added that represents the Bungie.net account name. An additional API call would be necessary to resolve the Bungie.net account name to one or more Destiny account profiles. Another option would be to require a Destiny gamertag and make the platform option required. The two values could then be used to resolve to a single Destiny account profile through a call to the Bungie.net API.
 
 Also, the dependency on pulling the manifest data from a database can be easily replaced with code that will pull the most recent manifest file into memory and load the definitions from the file held in memory. Such a solution would also need a background task built into the bot to monitor for new versions of the manifest published by Bungie.net.
 # Supported Commands
