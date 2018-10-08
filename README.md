@@ -3,11 +3,10 @@ Discord bot written in Python. Allows users to show off guns acquired while play
 
 # Dependencies
 The gunsmith bot relies on the following repositories (which may or may not be up to date :-)):
-[Add links]
+
 destiny-clan-member-manager: Daily process to refresh clan member data
 destiny-manifest-manager: Daily process to keep manifest data up to date
 pyWelcomeBot: Discord bot that supports several administrative functions including maintaining a cross-reference of Discord accounts to Destiny accounts
-
 
 # Supported Commands
 
@@ -22,17 +21,17 @@ The *help* message is as follows:
 !gunsmith [platform] [subclass] [weapon]
 where platform, subclass, and weapon are optional and order does not matter.
 
-**Acceptable Platform Options**
+**Platform Options**
 pc
 ps
 xb
 
-**Acceptable Subclass Options**
+**Subclass Options**
 hunter
 titan
 warlock
 
-**Acceptable Weapon Options**
+**Weapon Options**
 kinetic
 energy
 power
