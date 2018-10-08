@@ -1,5 +1,5 @@
 # pyGunsmith
-Discord bot written in Python. Allows users to show off guns acquired while playing Destiny 2.
+Discord bot written in Python. Allows users to show off **equipped** guns acquired while playing Destiny 2.
 # Introduction
 The bot is split into two separate files. The first, [pyGunsmith.py](https://github.com/dad2cl3/pyGunsmith/blob/master/pyGunsmith.py), contains the basic code the bot needs to function.
 
