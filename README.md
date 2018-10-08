@@ -7,9 +7,13 @@ The second, [gunsmith.py](https://github.com/dad2cl3/pyGunsmith/), contains the 
 
 The main processing logic relies upon two functions: *initialize()* and *main()*.
 
-*initialize()* loads all possible definitions from the manifest into memory within the bot in order to greatly minimize the number of calls needed to the Bungie.net API.
+*initialize()* loads all possible definitions from the manifest into memory within the bot in order to greatly minimize the number of calls needed to the Bungie.net API. The bot utilizes the following manifest tables:
+* DestinyCollectibleDefinition 
+* DestinyInventoryBucketDefinition
+* DestinyInventoryItemDefinition
+* DestinyStatDefinition
 
-*main()* is where a fully validated request to the bot is turned into a response back to the requestor.
+*main()* is where a fully validated request to the bot is turned into a response back to the requestor. The function is written to minimize the number of Bungie.net API calls due to the overhead incurred for each call.
 
 # Dependencies
 The gunsmith bot relies on the following repositories (which may or may not be up to date :-) I swear it is on my list of todos):
@@ -20,6 +24,9 @@ The gunsmith bot relies on the following repositories (which may or may not be u
 
 [pyWelcomeBot](https://github.com/dad2cl3/pyWelcomeBot): Discord bot that supports several administrative functions including maintaining a cross-reference of Discord accounts to Destiny accounts.
 
+**Note:** The dependency on converting a Discord user to a Destiny account can be removed if an additional parameter is added to the gunsmith that represents the Bungie.net account name. An additional API call would be necessary to resolve the Bungie.net account name to one or more Destiny account profiles. Another option would be to require a Destiny gamertag and make the platform option required. The two values could then be used to resolve to a Destiny account profile through a call to the Bungie.net API.
+
+Also, the dependency on pulling the manifest data from a database can be easily replaced with code that will pull the most recent manifest file into memory and load the definitions from the file held in memory. Such a solution would also need a background task built into the bot to monitor for new versions of the manifest published by Bungie.net.
 # Supported Commands
 
 ## !gunsmith help
