@@ -33,48 +33,8 @@ Also, the dependency on pulling the manifest data from a database can be easily 
 The *help* command generates a direct message to the sender. The contents of the direct message are contained within the configuration file used by the bot.
 
 The *help* message is as follows:
-```Add screenshot
-Gunsmith Help
 
-Command syntax:
-
-!gunsmith [platform] [subclass] [weapon]
-where platform, subclass, and weapon are optional and order does not matter.
-
-Platform Options
-pc
-ps
-xb
-
-Subclass Options
-hunter
-titan
-warlock
-
-Weapon Options
-kinetic
-energy
-power
-
-Syntax Examples:
-!gunsmith
-!gunsmith hunter
-!gunsmith power
-!gunsmith xb
-!gunsmith hunter power xb
-
-Processing Rules:
-
-If *platform* is not supplied, the most recent platform played will be identified.
-
-If *subclass* is not supplied, the most recent character played will be used.
-
-If *weapon* is not supplied, all equipped weapons will be returned.
-
-If no options are supplied, all equipped weapons for the most recently played character on the most recently played platform will be returned.
-```
-**Note:** The bot will ignore options it doesn't recognize based on the valid options and rules above.
-
+![Gunsmith Help Message](https://github.com/dad2cl3/pyGunsmith/blob/master/doc/gunsmith-help-sample.png)
 ## !gunsmith reload
 The *reload* command forces the bot to reload manifest definitions and the Discord user to Destiny account(s) cross-reference utilized by the bot. It can only be run by a specified list of users including the gunsmith.
 
