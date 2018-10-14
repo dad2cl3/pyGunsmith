@@ -39,18 +39,24 @@ def initialize ():
     for target_sql in definitions_sql:
         target_definitions = execute_sql(pg, target_sql['sql'])
         definitions[target_sql['target']] = target_definitions
+        print('{0}: {1} definitions loaded...'.format(target_sql['target'], len(target_definitions)))
 
     duration = time.time() - start
-    print('Database execution time: {0:.2f}s'.format(duration))
     pg.close()
 
     # add static values
     # move to config file
     definitions['platforms'] = ['ps', 'xb', 'pc']
+    print('{0}: {1} definitions loaded...'.format('platforms', len(definitions['platforms'])))
+
     definitions['subclasses'] = ['hunter', 'titan', 'warlock']
+    print('{0}: {1} definitions loaded...'.format('subclasses', len(definitions['subclasses'])))
+
     definitions['weaponSlots'] = ['kinetic', 'energy', 'power']
+    print('{0}: {1} definitions loaded...'.format('weaponSlots', len(definitions['weaponSlots'])))
 
     #print(json.dumps(definitions)) # debugging
+    print('Database execution time: {0:.2f}s'.format(duration))
     print('Initialized the bot...')
 
     return definitions
@@ -132,7 +138,7 @@ def get_account_profile(account_id, membership_type):
 
 def get_target_gunsmith_profile(gunsmith_profiles):
     print('Getting target gunsmith profile...')
-
+    # need to correct return profile information
     last_played = '0'
 
     target_gunsmith_profile = {}
@@ -144,6 +150,7 @@ def get_target_gunsmith_profile(gunsmith_profiles):
         if date_last_played > last_played:
             target_gunsmith_profile = account_profile
 
+    #print(json.dumps(target_gunsmith_profile))
     return target_gunsmith_profile
 
 
@@ -153,6 +160,7 @@ def get_gunsmith_profiles(server_id, discord_id):
     print('Server ID: {0} - Discord ID: {1}'.format(server_id, discord_id))
 
     gunsmith_profiles = gunsmith_definitions['profiles']
+    #print(gunsmith_profiles) # debugging
 
     found_profiles = []
 
@@ -236,6 +244,7 @@ def get_weapon_detail (item_instance, item_components):
         if 'plugHash' in single_socket:
             plug_hash = single_socket['plugHash']
             plug_definition = get_definition('items', str(plug_hash))
+            #print(plug_definition)
             plug_name = plug_definition['item_name']
 
             if len(plug_name) > 0:
@@ -260,7 +269,11 @@ def get_weapon_detail (item_instance, item_components):
 
     # get weapon source
     source_definition = get_definition('sources', str(item_instance['itemHash']))
-    weapon_source = source_definition['source'].replace('Source: ', '')
+    #print(source_definition)
+    if source_definition != {}:
+        weapon_source = source_definition['source'].replace('Source: ', '')
+    else:
+        weapon_source = ''
 
     weapon_details = {
         'details': item_details,
@@ -377,8 +390,13 @@ def main (server_id, discord_id, input_string, definitions):
                 if gunsmith_profile['destiny_membership_type'] == target_membership_type:
                     target_gunsmith_profile = gunsmith_profile
         elif target_membership_type == 0 and len(gunsmith_profiles) > 1:
-            # no platform requested and mulitple gunsmith profiles found
+            # no platform requested and multiple gunsmith profiles found
+            # requires API calls
+            api_start_time = time.time()
             target_gunsmith_profile = get_target_gunsmith_profile(gunsmith_profiles)
+            api_duration = time.time() - api_start_time
+            api_time = '{0:.2f}s'.format(api_duration)
+            print('API Duration: {0:.2f}s'.format(api_duration))
         elif target_membership_type > 0 and len(gunsmith_profiles) == 1:
             # specific platform requested and single gunsmith profile found
             #print(json.dumps(gunsmith_profiles)) # debugging
@@ -396,14 +414,19 @@ def main (server_id, discord_id, input_string, definitions):
                 'error': 'Destiny profile not found.'
             }
         else:
-            target_account_id = target_gunsmith_profile['destiny_id']
-            target_membership_type = target_gunsmith_profile['destiny_membership_type']
-            # get account profile
-            api_start_time = time.time()
-            account_profile = get_account_profile(target_account_id, target_membership_type)
-            api_duration = time.time() - api_start_time
-            api_time = '{0:.2f}s'.format(api_duration)
-            print('Duration: {0:.2f}s'.format(api_duration))
+            if 'profile' in target_gunsmith_profile:
+                # target_gunsmith_profile already contains account profile for requestors who play on multiple platforms
+                # no need to look up a second time
+                account_profile = target_gunsmith_profile
+            else:
+                target_account_id = target_gunsmith_profile['destiny_id']
+                target_membership_type = target_gunsmith_profile['destiny_membership_type']
+                # get account profile
+                api_start_time = time.time()
+                account_profile = get_account_profile(target_account_id, target_membership_type)
+                api_duration = time.time() - api_start_time
+                api_time = '{0:.2f}s'.format(api_duration)
+                print('API Duration: {0:.2f}s'.format(api_duration))
 
             if account_profile != {} and 'ErrorCode' not in account_profile:
                 # profile found so split in to smaller manageable chunks

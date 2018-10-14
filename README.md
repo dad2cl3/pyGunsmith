@@ -35,6 +35,7 @@ The *help* command generates a direct message to the sender. The contents of the
 The *help* message is as follows:
 
 ![Gunsmith Help Message](https://github.com/dad2cl3/pyGunsmith/blob/master/doc/gunsmith-help-sample.png)
+
 ## !gunsmith reload
 The *reload* command forces the bot to reload manifest definitions and the Discord user to Destiny account(s) cross-reference utilized by the bot. It can only be run by a specified list of users including the gunsmith.
 

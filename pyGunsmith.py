@@ -41,12 +41,12 @@ async def on_message (message):
                 await client.send_message(message.channel, 'First time was incompetence, this time it\'s sabotage. <@297694001874731008> get to the bottom of this.')
 
         else:
-            discord_id = message.author.id
-            server_id = message.server.id
+            #discord_id = message.author.id
+            #server_id = message.server.id
             # testing override
             # should prolly move these overrides to config and enable a test mode for the bot.
             #server_id = 141176119813603328
-            #discord_id = 297694001874731008
+            #discord_id = 312310965033238528
 
             print('Server ID: {0} - Discord ID: {1}'.format(server_id, discord_id))
 
@@ -85,6 +85,11 @@ async def on_message (message):
                     await client.send_message(message.channel, weapon_details['error'])
                 else:
                     for weapon_detail in weapon_details['weapon_details']:
+                        if len(input_string) > 0:
+                            content = '<@{0}>: `{1}`'.format(discord_id, input_string)
+                        else:
+                            content = '<@{0}>'.format(discord_id)
+
                         #print(json.dumps(weapon_detail)) # debugging
 
                         weapon_embed = discord.Embed(
@@ -101,11 +106,12 @@ async def on_message (message):
                             url=weapon_detail['details']['icon']
                         )
 
-                        weapon_embed.add_field(
-                            name='Source(s)',
-                            value=weapon_detail['source'],
-                            inline=False
-                        )
+                        if len(weapon_detail['source']) > 0:
+                            weapon_embed.add_field(
+                                name='Source(s)',
+                                value=weapon_detail['source'],
+                                inline=False
+                            )
 
                         '''weapon_embed.add_field(
                             name='Stats',
@@ -136,6 +142,6 @@ async def on_message (message):
 
                         #print(json.dumps(weapon_embed.to_dict())) # debugging
 
-                        await client.send_message(message.channel, embed=weapon_embed)
+                        await client.send_message(message.channel, content=content, embed=weapon_embed)
 
 client.run(discord_config['token'])
