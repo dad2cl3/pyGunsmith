@@ -45,8 +45,9 @@ async def on_message (message):
             #server_id = message.server.id
             # testing override
             # should prolly move these overrides to config and enable a test mode for the bot.
-            #server_id = 141176119813603328
+            server_id = 141176119813603328
             #discord_id = 312310965033238528
+            discord_id = 141625016193253377
 
             print('Server ID: {0} - Discord ID: {1}'.format(server_id, discord_id))
 

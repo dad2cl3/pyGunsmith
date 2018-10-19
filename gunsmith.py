@@ -146,9 +146,10 @@ def get_target_gunsmith_profile(gunsmith_profiles):
     for profile in gunsmith_profiles:
         print('Checking profile {0}'.format(profile))
         account_profile = get_account_profile(profile['destiny_id'], profile['destiny_membership_type'])
-        date_last_played = account_profile['profile']['data']['dateLastPlayed']
-        if date_last_played > last_played:
-            target_gunsmith_profile = account_profile
+        if 'dateLastPlayed' in account_profile['profile']['data']:
+            date_last_played = account_profile['profile']['data']['dateLastPlayed']
+            if date_last_played > last_played:
+                target_gunsmith_profile = account_profile
 
     #print(json.dumps(target_gunsmith_profile))
     return target_gunsmith_profile
