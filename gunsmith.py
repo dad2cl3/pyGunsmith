@@ -139,7 +139,8 @@ def get_account_profile(account_id, membership_type):
 def get_target_gunsmith_profile(gunsmith_profiles):
     print('Getting target gunsmith profile...')
     # need to correct return profile information
-    last_played = '0'
+    time_format = '%Y-%m-%dT%H:%M:%SZ'
+    last_played = time.strptime('2000-01-01T00:00:00Z', time_format)
 
     target_gunsmith_profile = {}
 
@@ -147,7 +148,8 @@ def get_target_gunsmith_profile(gunsmith_profiles):
         print('Checking profile {0}'.format(profile))
         account_profile = get_account_profile(profile['destiny_id'], profile['destiny_membership_type'])
         if 'dateLastPlayed' in account_profile['profile']['data']:
-            date_last_played = account_profile['profile']['data']['dateLastPlayed']
+            date_last_played = time.strptime(account_profile['profile']['data']['dateLastPlayed'], time_format)
+            #print(date_last_played) debugging
             if date_last_played > last_played:
                 target_gunsmith_profile = account_profile
 
@@ -168,6 +170,7 @@ def get_gunsmith_profiles(server_id, discord_id):
     if int(discord_id) in gunsmith_profiles:
         print('Discord ID found')
         gunsmith_profile = gunsmith_profiles[int(discord_id)]
+        #print(gunsmith_profile)
         if len(gunsmith_profile) >= 1:
             print('Searching for server...')
             for profile in gunsmith_profile:

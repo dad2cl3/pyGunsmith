@@ -41,13 +41,14 @@ async def on_message (message):
                 await client.send_message(message.channel, 'First time was incompetence, this time it\'s sabotage. <@297694001874731008> get to the bottom of this.')
 
         else:
-            #discord_id = message.author.id
-            #server_id = message.server.id
+            discord_id = message.author.id
+            server_id = message.server.id
             # testing override
             # should prolly move these overrides to config and enable a test mode for the bot.
-            server_id = 141176119813603328
+            #server_id = 141176119813603328
             #discord_id = 312310965033238528
-            discord_id = 141625016193253377
+            #discord_id = 141625016193253377
+            #discord_id = 102806583133605888
 
             print('Server ID: {0} - Discord ID: {1}'.format(server_id, discord_id))
 
