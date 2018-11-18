@@ -49,6 +49,7 @@ async def on_message (message):
             #discord_id = 312310965033238528
             #discord_id = 141625016193253377
             #discord_id = 102806583133605888
+            #discord_id = 347395856393043990 # mr_rots
 
             print('Server ID: {0} - Discord ID: {1}'.format(server_id, discord_id))
 
@@ -81,7 +82,7 @@ async def on_message (message):
                 await client.send_message(user, embed=help_embed)
             else:
                 weapon_details = gunsmith.main(server_id, discord_id, input_string, gunsmith_definitions)
-                print(json.dumps(weapon_details)) # debugging
+                #print(json.dumps(weapon_details)) # debugging
 
                 if 'error' in weapon_details:
                     await client.send_message(message.channel, weapon_details['error'])

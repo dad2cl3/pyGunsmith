@@ -65,10 +65,34 @@ def initialize ():
 def parse_input_string (input_string):
     print('Parsing input string...')
 
-    targets = {}
+    #targets = {}
+    targets = {
+        'platform': {
+            'value': 'none'
+        },
+        'class': {
+            'value': 'none'
+        },
+        'weapon_slot': {
+            'value': 'none'
+        }
+    }
+
+    options = input_string.lower().split()
+
+    for option in options:
+        if option in gunsmith_definitions['platforms']:
+            targets['platform']['value'] = option
+            print('Platform {0} found...'.format(option))
+        elif option in gunsmith_definitions['subclasses']:
+            targets['class']['value'] = option
+            print('Subclass {0} found...'.format(option))
+        elif option in gunsmith_definitions['weaponSlots']:
+            targets['weapon_slot']['value'] = option
+            print('Weapon slot {0} found...'.format(option))
 
     # identify target platform
-    target_platform = 'none'
+    '''target_platform = 'none'
     for platform in gunsmith_definitions['platforms']:
         print('Checking input string for platform {0}...'.format(platform))
         if platform in input_string:
@@ -99,7 +123,11 @@ def parse_input_string (input_string):
 
     print('Target platform: {0}'.format(target_platform))
     print('Target subclass: {0}'.format(target_subclass))
-    print('Target weapon slot: {0}'.format(target_weapon_slot))
+    print('Target weapon slot: {0}'.format(target_weapon_slot))'''
+
+    print('Target platform: {0}'.format(targets['platform']['value']))
+    print('Target subclass: {0}'.format(targets['class']['value']))
+    print('Target weapon slot: {0}'.format(targets['weapon_slot']['value']))
 
     return targets
 
@@ -201,83 +229,89 @@ def get_weapon_detail (item_instance, item_components):
             'screenshot': '{0}{1}'.format('https://www.bungie.net', item_definition['item_screenshot'])
         }
 
+    # need to trap for weapons that are classified in the manifest
+    if item_details['name'] == 'Classified':
+        print('Classified weapon found...')
+        weapon_stats = ['Classified']
+        weapon_plugs = ['Classified']
+        weapon_source = 'Classified'
+    else:
+        # get instance stats
+        stats_data = item_components['stats']['data'][item_instance['instanceId']]['stats']
+        #print(json.dumps(stats_data)) # debugging
 
-    # get instance stats
-    stats_data = item_components['stats']['data'][item_instance['instanceId']]['stats']
-    #print(json.dumps(stats_data)) # debugging
-
-    weapon_stats = []
-    for stat in stats_data:
-        stat_value = stats_data[stat]['value']
-        stat_definition = get_definition('stats', str(stat))
-        stat_name = stat_definition['stat_name']
-        weapon_stats.append('{0} {1}'.format(stat_name, stat_value))
-
-    #print(json.dumps(weapon_stats)) # debugging
-    # get hidden stats
-    hidden_stats = []
-
-    if 'stats' in item_definition:
-        for stat in item_definition['stats']:
+        weapon_stats = []
+        for stat in stats_data:
+            stat_value = stats_data[stat]['value']
             stat_definition = get_definition('stats', str(stat))
             stat_name = stat_definition['stat_name']
-            #print('Stat Name: {0}'.format(stat_name)) # debugger
+            weapon_stats.append('{0} {1}'.format(stat_name, stat_value))
 
-            if len(stat_name) > 0:
-                if stat_name in ['Aim Assistance', 'Recoil Direction', 'Zoom']:
-                    stat_value = item_definition['stats'][stat]['value']
+        #print(json.dumps(weapon_stats)) # debugging
+        # get hidden stats
+        hidden_stats = []
 
-                    hidden_stats.append('{0} {1}'.format(stat_name, stat_value))
+        if 'stats' in item_definition:
+            for stat in item_definition['stats']:
+                stat_definition = get_definition('stats', str(stat))
+                stat_name = stat_definition['stat_name']
+                #print('Stat Name: {0}'.format(stat_name)) # debugger
 
-    hidden_stats = sorted(hidden_stats)
+                if len(stat_name) > 0:
+                    if stat_name in ['Aim Assistance', 'Recoil Direction', 'Zoom']:
+                        stat_value = item_definition['stats'][stat]['value']
 
-    #print(json.dumps(hidden_stats)) # debugging
+                        hidden_stats.append('{0} {1}'.format(stat_name, stat_value))
 
-    weapon_stats.extend(hidden_stats)
+        hidden_stats = sorted(hidden_stats)
 
-    #print(weapon_stats)
+        #print(json.dumps(hidden_stats)) # debugging
 
-    # parse out the item components
-    instance_data = item_components['instances']['data'][item_instance['instanceId']]
+        weapon_stats.extend(hidden_stats)
 
-    socket_data = item_components['sockets']['data'][item_instance['instanceId']]
+        #print(weapon_stats)
 
-    weapon_plugs = []
-    for single_socket in socket_data['sockets']:
-        reusable_plugs = []
-        if 'plugHash' in single_socket:
-            plug_hash = single_socket['plugHash']
-            plug_definition = get_definition('items', str(plug_hash))
-            #print(plug_definition)
-            plug_name = plug_definition['item_name']
+        # parse out the item components
+        instance_data = item_components['instances']['data'][item_instance['instanceId']]
 
-            if len(plug_name) > 0:
-                if 'reusablePlugHashes' in single_socket:
-                    if plug_hash in single_socket['reusablePlugHashes']:
-                        for reusable_plug_hash in single_socket['reusablePlugHashes']:
-                            reusable_plug_definition = get_definition('items', str(reusable_plug_hash))
-                            reusable_plug_name = reusable_plug_definition['item_name']
+        socket_data = item_components['sockets']['data'][item_instance['instanceId']]
 
-                            if reusable_plug_name == plug_name:
-                                reusable_plug_name = '**{0}**'.format(reusable_plug_name)
+        weapon_plugs = []
+        for single_socket in socket_data['sockets']:
+            reusable_plugs = []
+            if 'plugHash' in single_socket:
+                plug_hash = single_socket['plugHash']
+                plug_definition = get_definition('items', str(plug_hash))
+                #print(plug_definition)
+                plug_name = plug_definition['item_name']
 
-                            reusable_plugs.append(reusable_plug_name)
+                if len(plug_name) > 0:
+                    if 'reusablePlugHashes' in single_socket:
+                        if plug_hash in single_socket['reusablePlugHashes']:
+                            for reusable_plug_hash in single_socket['reusablePlugHashes']:
+                                reusable_plug_definition = get_definition('items', str(reusable_plug_hash))
+                                reusable_plug_name = reusable_plug_definition['item_name']
+
+                                if reusable_plug_name == plug_name:
+                                    reusable_plug_name = '**{0}**'.format(reusable_plug_name)
+
+                                reusable_plugs.append(reusable_plug_name)
+                        else:
+                            reusable_plugs.append('**{0}**'.format(plug_name))
                     else:
                         reusable_plugs.append('**{0}**'.format(plug_name))
-                else:
-                    reusable_plugs.append('**{0}**'.format(plug_name))
 
-            plug_string = ' - '.join(reusable_plugs)
-            weapon_plugs.append(plug_string)
+                plug_string = ' - '.join(reusable_plugs)
+                weapon_plugs.append(plug_string)
 
 
-    # get weapon source
-    source_definition = get_definition('sources', str(item_instance['itemHash']))
-    #print(source_definition)
-    if source_definition != {}:
-        weapon_source = source_definition['source'].replace('Source: ', '')
-    else:
-        weapon_source = ''
+        # get weapon source
+        source_definition = get_definition('sources', str(item_instance['itemHash']))
+        #print(source_definition)
+        if source_definition != {}:
+            weapon_source = source_definition['source'].replace('Source: ', '')
+        else:
+            weapon_source = ''
 
     weapon_details = {
         'details': item_details,
@@ -368,19 +402,26 @@ def main (server_id, discord_id, input_string, definitions):
         else:
             # move to config file
             targets = {
-                'target_platform': 'none',
-                'target_subclass': 'none',
-                'target_weapon_slot': 'none'
+                'platform': {
+                    'value': 'none'
+                },
+                'class': {
+                    'value': 'none'
+                },
+                'weapon_slot': {
+                    'value': 'none'
+                }
             }
 
+        print(targets)
         # clean this up. all this could be stored as json in config file.
-        if targets['target_platform'] == 'none':
+        if targets['platform']['value'] == 'none':
             target_membership_type = 0
-        elif targets['target_platform'] == 'pc':
+        elif targets['platform']['value'] == 'pc':
             target_membership_type = 4
-        elif targets['target_platform'] == 'ps':
+        elif targets['platform']['value'] == 'ps':
             target_membership_type = 2
-        elif targets['target_platform'] == 'xb':
+        elif targets['platform']['value'] == 'xb':
             target_membership_type = 1
 
         print('Target membership type: {0}'.format(target_membership_type))
@@ -441,14 +482,14 @@ def main (server_id, discord_id, input_string, definitions):
                 profile_plug_sets = account_profile['profilePlugSets']
                 character_plug_sets = account_profile['characterPlugSets']
 
-                if targets['target_subclass'] == 'none':
+                if targets['class']['value'] == 'none':
                     # get most recent character
                     target_character = get_most_recent_character(profile_details, profile_characters)
                     #print(target_character) # debugging
                 else:
                     # get specified subclass
                     # does subclass exist?
-                    target_character = get_character_by_class(profile_characters, targets['target_subclass'])
+                    target_character = get_character_by_class(profile_characters, targets['class']['value'])
 
                 print('Target character: {0}'.format(target_character)) # debugging
 
@@ -463,15 +504,17 @@ def main (server_id, discord_id, input_string, definitions):
                         bucket_hash = item['bucketHash']
                         bucket_name = gunsmith_definitions['buckets'][str(bucket_hash)]['bucket_name']
 
-                        if targets['target_weapon_slot'] == 'none':
+                        if targets['weapon_slot']['value'] == 'none':
                             for weapon_slot in config['gunsmith']['weaponSlots']:
                                 if weapon_slot in bucket_name.lower():
                                     #print(bucket_name) # debugging
                                     item_instances.append(
                                         {'itemHash': item_hash, 'instanceId': item['itemInstanceId']}
                                     )
-                        elif targets['target_weapon_slot'] in bucket_name.lower():
+                        elif targets['weapon_slot']['value'] in bucket_name.lower():
                             item_instances.append({'itemHash': item_hash, 'instanceId': item['itemInstanceId']})
+
+                    print(json.dumps(item_components))
 
                     for item_instance in item_instances:
                         instance_details = get_weapon_detail(item_instance, item_components)
