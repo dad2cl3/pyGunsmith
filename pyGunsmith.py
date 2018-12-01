@@ -1,4 +1,4 @@
-import discord, gunsmith, json
+import discord, gunsmith, json, re
 
 print('Bot starting...')
 print('Loading configuration file...')
@@ -47,7 +47,7 @@ async def on_message (message):
             # should prolly move these overrides to config and enable a test mode for the bot.
             #server_id = 141176119813603328
             #discord_id = 312310965033238528
-            #discord_id = 141625016193253377
+            #discord_id = 141625016193253377 # GreatDaemon
             #discord_id = 102806583133605888
             #discord_id = 347395856393043990 # mr_rots
 
@@ -81,6 +81,37 @@ async def on_message (message):
 
                 await client.send_message(user, embed=help_embed)
             else:
+                # add ability to override server and discord
+                # search for server_id: and override local variable
+                if 'server_id' in input_string:
+                    server_id_pattern = re.compile('.*server_id:([0-9]+)\s?')
+
+                    matches = re.match(server_id_pattern, input_string)
+
+                    if len(matches.regs) == 2:
+                        server_id = str(matches.group(1))
+                        print('Override server_id: {0}'.format(server_id))
+
+                # search for discord_id: and override local variable
+                if 'discord_id' in input_string:
+                    discord_id_pattern = re.compile('.*discord_id:([0-9]+)\s?')
+
+                    matches = re.match(discord_id_pattern, input_string)
+                    if len(matches.regs) == 2:
+                        discord_id = str(matches.group(1))
+                        print('Override discord_id: {0}'.format(discord_id))
+
+
+                # strip out the overrides from the input string
+                server_id_pattern = re.compile('(.*)(server_id:[0-9]+)(\s?)')
+                input_string = server_id_pattern.sub('\\1\\3', input_string)
+
+                discord_id_pattern = re.compile('(.*)(discord_id:[0-9]+)(\s?)')
+                input_string = discord_id_pattern.sub('\\1\\3', input_string)
+
+                # clean up any extra spaces
+                input_string = input_string.strip()
+
                 weapon_details = gunsmith.main(server_id, discord_id, input_string, gunsmith_definitions)
                 #print(json.dumps(weapon_details)) # debugging
 
@@ -143,7 +174,7 @@ async def on_message (message):
                             text='API Time: {0} - Elapsed Time: {1}'.format(weapon_details['api_time'], weapon_details['elapsed_time'])
                         )
 
-                        #print(json.dumps(weapon_embed.to_dict())) # debugging
+                        print(json.dumps(weapon_embed.to_dict())) # debugging
 
                         await client.send_message(message.channel, content=content, embed=weapon_embed)
 

@@ -49,8 +49,8 @@ def initialize ():
     definitions['platforms'] = ['ps', 'xb', 'pc']
     print('{0}: {1} definitions loaded...'.format('platforms', len(definitions['platforms'])))
 
-    definitions['subclasses'] = ['hunter', 'titan', 'warlock']
-    print('{0}: {1} definitions loaded...'.format('subclasses', len(definitions['subclasses'])))
+    definitions['classes'] = ['hunter', 'titan', 'warlock']
+    print('{0}: {1} definitions loaded...'.format('classes', len(definitions['classes'])))
 
     definitions['weaponSlots'] = ['kinetic', 'energy', 'power']
     print('{0}: {1} definitions loaded...'.format('weaponSlots', len(definitions['weaponSlots'])))
@@ -84,7 +84,7 @@ def parse_input_string (input_string):
         if option in gunsmith_definitions['platforms']:
             targets['platform']['value'] = option
             print('Platform {0} found...'.format(option))
-        elif option in gunsmith_definitions['subclasses']:
+        elif option in gunsmith_definitions['classes']:
             targets['class']['value'] = option
             print('Subclass {0} found...'.format(option))
         elif option in gunsmith_definitions['weaponSlots']:
@@ -180,6 +180,7 @@ def get_target_gunsmith_profile(gunsmith_profiles):
             #print(date_last_played) debugging
             if date_last_played > last_played:
                 target_gunsmith_profile = account_profile
+                last_played = date_last_played
 
     #print(json.dumps(target_gunsmith_profile))
     return target_gunsmith_profile
@@ -349,7 +350,7 @@ def get_character_by_class(characters, target_subclass):
 
     for character in characters['data']:
 
-        class_definition = get_definition('subclass', characters['data'][character]['classHash'])
+        class_definition = get_definition('class', characters['data'][character]['classHash'])
 
         #print(class_definition) # debugging
         if class_definition['name'].lower() == target_subclass.lower():
@@ -387,7 +388,7 @@ def main (server_id, discord_id, input_string, definitions):
 
     # get discord profile
     gunsmith_profiles = get_gunsmith_profiles(server_id, discord_id)
-    # print(gunsmith_profiles) # debugging
+    print(json.dumps(gunsmith_profiles, indent=2)) # debugging
 
     # add check to make sure a profile exists
     if gunsmith_profiles == []:
@@ -514,7 +515,7 @@ def main (server_id, discord_id, input_string, definitions):
                         elif targets['weapon_slot']['value'] in bucket_name.lower():
                             item_instances.append({'itemHash': item_hash, 'instanceId': item['itemInstanceId']})
 
-                    print(json.dumps(item_components))
+                    #print(json.dumps(item_components)) # debugging
 
                     for item_instance in item_instances:
                         instance_details = get_weapon_detail(item_instance, item_components)
