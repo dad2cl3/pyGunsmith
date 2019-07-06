@@ -7,8 +7,6 @@ with open('gunsmith-config.json', 'r') as config_file:
 
 discord_config = config['discord']
 
-client = discord.Client()
-
 print('Initializing bot...')
 gunsmith_definitions = gunsmith.initialize()
 
