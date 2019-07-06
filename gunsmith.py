@@ -186,10 +186,10 @@ def get_target_gunsmith_profile(gunsmith_profiles):
     return target_gunsmith_profile
 
 
-def get_gunsmith_profiles(server_id, discord_id):
+def get_gunsmith_profiles(guild_id, discord_id):
     print('Getting gunsmith profile(s)...')
 
-    print('Server ID: {0} - Discord ID: {1}'.format(server_id, discord_id))
+    print('Guild ID: {0} - Discord ID: {1}'.format(guild_id, discord_id))
 
     gunsmith_profiles = gunsmith_definitions['profiles']
     #print(gunsmith_profiles) # debugging
@@ -204,7 +204,7 @@ def get_gunsmith_profiles(server_id, discord_id):
             print('Searching for server...')
             for profile in gunsmith_profile:
                 print(profile['server_id'])
-                if int(server_id) == profile['server_id']:
+                if int(guild_id) == profile['server_id']:
                     found_profiles.append(profile)
     else:
         print(discord_id)
@@ -321,7 +321,7 @@ def get_weapon_detail (item_instance, item_components):
         'perks': '\n'.join(weapon_plugs)
     }
 
-    print(json.dumps(weapon_details))
+    #print(json.dumps(weapon_details))
 
     duration = time.time() - start
     print('Weapon Detail Duration: {0:.2f}s'.format(duration))
@@ -371,7 +371,7 @@ def get_character_by_class(characters, target_subclass):
     return character_id
 
 
-def main (server_id, discord_id, input_string, definitions):
+def main(guild_id, discord_id, input_string, definitions):
     start_time = time.time()
 
     global gunsmith_definitions
@@ -387,7 +387,7 @@ def main (server_id, discord_id, input_string, definitions):
     # discord_id = 348207889728536577
 
     # get discord profile
-    gunsmith_profiles = get_gunsmith_profiles(server_id, discord_id)
+    gunsmith_profiles = get_gunsmith_profiles(guild_id, discord_id)
     print(json.dumps(gunsmith_profiles, indent=2)) # debugging
 
     # add check to make sure a profile exists
